@@ -1,0 +1,7 @@
+export(add_fields_based_on_local_authority_code)
+export(add_fields_based_on_oa11_code)
+export(add_fields_based_on_postcode)
+import(dplyr)
+import(stringr)
+import(tidyr)
+import(fst)

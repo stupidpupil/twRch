@@ -1,0 +1,17 @@
+Package: BasicPostcodes
+Title: BasicPostcodes
+Version: 0.0.1
+Authors@R: c(
+  person("Adam", "Watkins", email = "adam.watkins@gmail.com", role = c("aut", "cre"))
+  )
+Description: Basic postcodes stuff
+License: file LICENSE
+Encoding: UTF-8
+Depends: 
+  R (>= 2.10),
+  dplyr,
+  stringr,
+  tidyr,
+  fst
+Suggests: 
+  testthat
