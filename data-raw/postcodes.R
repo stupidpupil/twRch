@@ -74,7 +74,6 @@ msoa11_names <- read_csv("https://visual.parliament.uk/msoanames/static/MSOA-Nam
     MSOA11Name = msoa11hclnm,
     MSOA11NameWelsh = msoa11hclnmw
   ) %>%
-  left_join(postcodes %>% select(MSOA11Code, LocalAuthorityCode) %>% distinct(), by='MSOA11Code') %>%
   write_fst("inst/extdata/MSOA11Code.fst", compress=100)
 
 read_csv("https://geoportal.statistics.gov.uk/datasets/c02975a3618b46db958369ff7204d1bf_0.csv",
