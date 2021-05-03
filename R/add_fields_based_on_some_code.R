@@ -22,12 +22,15 @@ add_fields_based_on_some_code <- function(
 
   direct_fields <- setdiff(fst_metadata$columnNames, code_name)
 
+  remaining_fields <- setdiff(fields, direct_fields)
+
   linkers <- linkages_from(direct_fields)
 
   req_links_with_fields <- list()
   for (l in names(linkers)) {
-    if(length(intersect(fields, linkers[[l]]))){
-      req_links_with_fields[[l]] <- intersect(fields, linkers[[l]])
+    if(length(intersect(remaining_fields, linkers[[l]]))){
+      req_links_with_fields[[l]] <- intersect(remaining_fields, linkers[[l]])
+      remaining_fields <- setdiff(remaining_fields, req_links_with_fields[[l]])
     }
   }
 
