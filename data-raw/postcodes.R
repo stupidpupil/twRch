@@ -59,7 +59,8 @@ postcodes %>%
   write_fst("inst/extdata/OA11Code.fst", compress=100)
 
 postcodes %>%
-  select(LSOA11Code, MSOA11Code) %>% distinct() %>%
+  filter(!is.na(LSOA11Code)) %>%
+  select(LSOA11Code, MSOA11Code, CountryCode) %>% distinct() %>%
   arrange(desc(LSOA11Code), MSOA11Code) %>%
   write_fst("inst/extdata/LSOA11Code.fst", compress=100)
 
