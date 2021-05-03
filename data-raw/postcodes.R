@@ -50,7 +50,18 @@ print("Writing…")
 postcodes %>% 
   select(Postcode, CountryCode, HealthOrgCode, LocalAuthorityCode, OA11Code, BUASD11Code, Latitude, Longitude) %>%
   arrange(desc(CountryCode), HealthOrgCode, LocalAuthorityCode, Postcode) %>%
-  write_fst("inst/extdata/postcodes.fst", compress=100)
+  write_fst("inst/extdata/Postcode.fst", compress=100)
+
+
+postcodes %>%
+  select(OA11Code, OA11RuralUrbanClassification, LSOA11Code) %>% distinct() %>%
+  arrange(desc(OA11Code), LSOA11Code) %>%
+  write_fst("inst/extdata/OA11Code.fst", compress=100)
+
+postcodes %>%
+  select(LSOA11Code, MSOA11Code) %>% distinct() %>%
+  arrange(desc(LSOA11Code), MSOA11Code) %>%
+  write_fst("inst/extdata/LSOA11Code.fst", compress=100)
 
 
 msoa11_names <- read_csv("https://visual.parliament.uk/msoanames/static/MSOA-Names-Latest.csv",
@@ -62,18 +73,14 @@ msoa11_names <- read_csv("https://visual.parliament.uk/msoanames/static/MSOA-Nam
     MSOA11Code = msoa11cd,
     MSOA11Name = msoa11hclnm,
     MSOA11NameWelsh = msoa11hclnmw
-  )
+  ) %>%
+  write_fst("inst/extdata/MSOA11Code.fst", compress=100)
 
-postcodes %>%
-  select(OA11Code, OA11RuralUrbanClassification, LSOA11Code, MSOA11Code) %>% distinct() %>%
-  left_join(msoa11_names, by='MSOA11Code') %>%
-  arrange(desc(MSOA11Code), LSOA11Code, OA11Code) %>%
-  write_fst("inst/extdata/output_areas11.fst", compress=100)
 
 postcodes %>%
   select(BUASD11Code, BUA11Code) %>% distinct() %>%
   arrange(desc(BUA11Code), BUASD11Code) %>%
-  write_fst("inst/extdata/built_up_areas11.fst", compress=100)
+  write_fst("inst/extdata/BUASD11Code.fst", compress=100)
 
 postcodes <- NULL
 
@@ -90,4 +97,4 @@ rename(
   LocalAuthorityName = LAD21NM,
   LocalAuthorityNameWelsh = LAD21NMW
 ) %>%
-write_fst("inst/extdata/local_authorities.fst", compress=100)
+write_fst("inst/extdata/LocalAuthorityCode.fst", compress=100)
