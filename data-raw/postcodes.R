@@ -38,7 +38,7 @@ postcodes <- read_csv(
     LocalAuthorityCode = oslaua,
     CountryCode = ctry,
     WestminsterParliamentConstituencyCode = pcon,
-    HealthOrgCode = oshlthau, # Good enough name for now…
+    HealthBoardONSCode = oshlthau, # Good enough name for now…
     Latitude = lat,
     Longitude = long
   )
@@ -48,8 +48,8 @@ print("Writing…")
 
 
 postcodes %>% 
-  select(Postcode, CountryCode, HealthOrgCode, LocalAuthorityCode, OA11Code, BUASD11Code, BUA11Code, Latitude, Longitude) %>%
-  arrange(desc(CountryCode), HealthOrgCode, LocalAuthorityCode, Postcode) %>%
+  select(Postcode, CountryCode, HealthBoardONSCode, LocalAuthorityCode, OA11Code, BUASD11Code, BUA11Code, Latitude, Longitude) %>%
+  arrange(desc(CountryCode), HealthBoardONSCode, LocalAuthorityCode, Postcode) %>%
   write_fst("inst/extdata/Postcode.fst", compress=100)
 
 
@@ -74,10 +74,8 @@ msoa11_names <- read_csv("https://visual.parliament.uk/msoanames/static/MSOA-Nam
     MSOA11Name = msoa11hclnm,
     MSOA11NameWelsh = msoa11hclnmw
   ) %>%
+  left_join(postcodes %>% select(MSOA11Code, LocalAuthorityCode) %>% distinct(), by='MSOA11Code') %>%
   write_fst("inst/extdata/MSOA11Code.fst", compress=100)
-
-postcodes <- NULL
-
 
 read_csv("https://geoportal.statistics.gov.uk/datasets/c02975a3618b46db958369ff7204d1bf_0.csv",
   col_types = cols_only(
@@ -91,6 +89,7 @@ rename(
   LocalAuthorityName = LAD21NM,
   LocalAuthorityNameWelsh = LAD21NMW
 ) %>%
+left_join(postcodes %>% select(LocalAuthorityCode, CountryCode) %>% distinct(), by='LocalAuthorityCode') %>%
 write_fst("inst/extdata/LocalAuthorityCode.fst", compress=100)
 
 read_csv("https://geoportal.statistics.gov.uk/datasets/e8e97fbc0444484a942f37d4190d520a_0.csv",
@@ -104,3 +103,5 @@ rename(
   BUA11Name = BUA11NM
 ) %>%
 write_fst("inst/extdata/BUA11Code.fst", compress=100)
+
+#postcodes <- NULL
