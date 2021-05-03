@@ -54,6 +54,7 @@ postcodes %>%
 
 
 postcodes %>%
+  filter(!is.na(OA11Code)) %>%
   select(OA11Code, OA11RuralUrbanClassification, LSOA11Code) %>% distinct() %>%
   arrange(desc(OA11Code), LSOA11Code) %>%
   write_fst("inst/extdata/OA11Code.fst", compress=100)
