@@ -4,8 +4,13 @@ Contains OS data © Crown copyright and database rights [year]
 Contains Royal Mail data © Royal Mail copyright and database rights [year] 
 Contains National Statistics data © Crown copyright and database rights [year]
 
-# ONS Local Authority Lookup
+# ONS Local Authority Name Lookup
 https://geoportal.statistics.gov.uk/datasets/c02975a3618b46db958369ff7204d1bf_0
+Source: Office for National Statistics licensed under the Open Government Licence v.3.0
+
+# ONS Built-Up Area Name Lookup
+https://geoportal.statistics.gov.uk/datasets/e8e97fbc0444484a942f37d4190d520a_0
+Source: Office for National Statistics licensed under the Open Government Licence v.3.0
 
 # House of Commons Library MSOA Names
 https://visual.parliament.uk/msoanames

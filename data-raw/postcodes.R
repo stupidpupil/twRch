@@ -48,7 +48,7 @@ print("Writing…")
 
 
 postcodes %>% 
-  select(Postcode, CountryCode, HealthOrgCode, LocalAuthorityCode, OA11Code, BUASD11Code, Latitude, Longitude) %>%
+  select(Postcode, CountryCode, HealthOrgCode, LocalAuthorityCode, OA11Code, BUASD11Code, BUA11Code, Latitude, Longitude) %>%
   arrange(desc(CountryCode), HealthOrgCode, LocalAuthorityCode, Postcode) %>%
   write_fst("inst/extdata/Postcode.fst", compress=100)
 
@@ -76,12 +76,6 @@ msoa11_names <- read_csv("https://visual.parliament.uk/msoanames/static/MSOA-Nam
   ) %>%
   write_fst("inst/extdata/MSOA11Code.fst", compress=100)
 
-
-postcodes %>%
-  select(BUASD11Code, BUA11Code) %>% distinct() %>%
-  arrange(desc(BUA11Code), BUASD11Code) %>%
-  write_fst("inst/extdata/BUASD11Code.fst", compress=100)
-
 postcodes <- NULL
 
 
@@ -98,3 +92,15 @@ rename(
   LocalAuthorityNameWelsh = LAD21NMW
 ) %>%
 write_fst("inst/extdata/LocalAuthorityCode.fst", compress=100)
+
+read_csv("https://geoportal.statistics.gov.uk/datasets/e8e97fbc0444484a942f37d4190d520a_0.csv",
+  col_types = cols_only(
+    BUA11CD = col_character(),
+    BUA11NM = col_character()
+  )
+) %>%
+rename(
+  BUA11Code = BUA11CD,
+  BUA11Name = BUA11NM
+) %>%
+write_fst("inst/extdata/BUA11Code.fst", compress=100)
