@@ -39,8 +39,8 @@ postcodes <- read_csv(
     CountryCode = ctry,
     WestminsterParliamentConstituencyCode = pcon,
     HealthBoardONSCode = oshlthau, # Good enough name for now…
-    Latitude = lat,
-    Longitude = long
+    PostcodeLatitude = lat,
+    PostcodeLongitude = long
   )
 
 
@@ -48,7 +48,8 @@ print("Writing…")
 
 
 postcodes %>% 
-  select(Postcode, CountryCode, HealthBoardONSCode, LocalAuthorityCode, OA11Code, BUASD11Code, BUA11Code, Latitude, Longitude) %>%
+  select(Postcode, CountryCode, HealthBoardONSCode, LocalAuthorityCode, OA11Code, BUASD11Code, BUA11Code, PostcodeLatitude, PostcodeLongitude) %>%
+  filter(CountryCode != 'N92000002') %>% # Northern Ireland's postcodes have painful licensing
   arrange(desc(CountryCode), HealthBoardONSCode, LocalAuthorityCode, Postcode) %>%
   write_fst("inst/extdata/Postcode.fst", compress=100)
 
