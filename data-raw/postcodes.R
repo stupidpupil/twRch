@@ -88,8 +88,8 @@ mysoc_uk_imd_w <- read_csv("https://raw.githubusercontent.com/mysociety/composit
 postcodes %>%
   filter(!is.na(LSOA11Code)) %>%
   select(LSOA11Code, MSOA11Code, CountryCode) %>% distinct() %>%
-  arrange(desc(LSOA11Code), MSOA11Code) %>%
   left_join(mysoc_uk_imd_w, by='LSOA11Code') %>%
+  arrange(desc(LSOA11Code), MSOA11Code) %>%
   write_fst("inst/extdata/LSOA11Code.fst", compress=100)
 
 stupidpupil_wimd_msoa <- read_csv("https://raw.githubusercontent.com/stupidpupil/wimd_msoa/main/output/wimd_msoa.csv") %>%
@@ -110,6 +110,7 @@ msoa11_names <- read_csv("https://visual.parliament.uk/msoanames/static/MSOA-Nam
     MSOA11NameWelsh = msoa11hclnmw
   ) %>%
   left_join(stupidpupil_wimd_msoa, by='MSOA11Code') %>%
+  arrange(MSOA11Code) %>%
   write_fst("inst/extdata/MSOA11Code.fst", compress=100)
 
 read_csv("https://geoportal.statistics.gov.uk/datasets/c02975a3618b46db958369ff7204d1bf_0.csv",
