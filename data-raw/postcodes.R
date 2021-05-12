@@ -75,12 +75,29 @@ postcodes %>%
   arrange(desc(OA11Code), LSOA11Code) %>%
   write_fst("inst/extdata/OA11Code.fst", compress=100)
 
+
+mysoc_uk_imd_w <- read_csv("https://raw.githubusercontent.com/mysociety/composite_uk_imd/master/uk_index/UK_IMD_W.csv") %>%
+  mutate(
+    LSOA11Code = lsoa,
+    LSOA11MySocIMD20WScore = UK_IMD_W_score,
+    LSOA11MySocIMD20LocalScore = overall_local_score,
+    LSOA11WIMD19Rank = rank(if_else(str_sub(LSOA11Code, end=1L) == 'W', -overall_local_score, NA_real_), na.last='keep') %>% as.integer() # Invert Overall local score to match WG ranking
+  ) %>%
+  select(starts_with("LSOA11"))
+
 postcodes %>%
   filter(!is.na(LSOA11Code)) %>%
   select(LSOA11Code, MSOA11Code, CountryCode) %>% distinct() %>%
   arrange(desc(LSOA11Code), MSOA11Code) %>%
+  left_join(mysoc_uk_imd_w, by='LSOA11Code') %>%
   write_fst("inst/extdata/LSOA11Code.fst", compress=100)
 
+stupidpupil_wimd_msoa <- read_csv("https://raw.githubusercontent.com/stupidpupil/wimd_msoa/main/output/wimd_msoa.csv") %>%
+  mutate(
+    MSOA11Code = `MSOA Code`,
+    MSOA11StpPplWIMD19Rank = `Pseudo-WIMD 2019 rank`
+    ) %>%
+  select(starts_with('MSOA11'))
 
 msoa11_names <- read_csv("https://visual.parliament.uk/msoanames/static/MSOA-Names-Latest.csv",
   col_types = cols_only(
@@ -92,6 +109,7 @@ msoa11_names <- read_csv("https://visual.parliament.uk/msoanames/static/MSOA-Nam
     MSOA11Name = msoa11hclnm,
     MSOA11NameWelsh = msoa11hclnmw
   ) %>%
+  left_join(stupidpupil_wimd_msoa, by='MSOA11Code') %>%
   write_fst("inst/extdata/MSOA11Code.fst", compress=100)
 
 read_csv("https://geoportal.statistics.gov.uk/datasets/c02975a3618b46db958369ff7204d1bf_0.csv",

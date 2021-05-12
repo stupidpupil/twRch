@@ -19,3 +19,8 @@ Source: Office for National Statistics licensed under the Open Government Licenc
 # House of Commons Library MSOA Names
 https://visual.parliament.uk/msoanames
 The MSOA names dataset is published under the Open Parliament Licence. 
+
+# MySociety's Composite UK IMD
+https://github.com/mysociety/composite_uk_imd
+Source indexes for each country are licenced as Open Government License (OGL) version 3.0.
+Unless otherwise stated, composite datasets are licensed under a Creative Commons Attribution 4.0 International License.
