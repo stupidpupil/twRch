@@ -43,6 +43,17 @@ postcodes <- read_csv(
     PostcodeLongitude = long
   )
 
+equivalents <- read_csv(unz("data-raw/Code_History_Database_(December_2020)_UK.zip", "Equivalents_V2.csv"),
+  col_types = cols_only(
+    GEOGCD = col_character(),
+    GEOGCDO = col_character(),
+    GEOGCDD = col_character(),
+    GEOGCDH = col_character(),
+    GEOGCDS = col_character(),
+    GEOGCDI = col_character(),
+    GEOGCDWG = col_character()
+  )
+  )
 
 print("Writing…")
 
@@ -53,6 +64,10 @@ postcodes %>%
   arrange(desc(CountryCode), HealthBoardONSCode, LocalAuthorityCode, Postcode) %>%
   write_fst("inst/extdata/Postcode.fst", compress=100)
 
+
+postcodes %>% select(HealthBoardONSCode) %>% distinct() %>%
+  left_join(equivalents %>% mutate(HealthBoardONSCode = GEOGCD, HealthBoardOrgCode = GEOGCDO) %>% select(starts_with('HealthBoard'))) %>%
+  write_fst("inst/extdata/HealthBoardONSCode.fst")
 
 postcodes %>%
   filter(!is.na(OA11Code)) %>%
