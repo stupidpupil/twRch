@@ -46,3 +46,15 @@ test_that("adding Local Authority for ME10 2HG works", {
   expect_equal(example$ResidentLocalAuthorityName, 'Swale')
   expect_equal(length(colnames(example)), 2)
 })
+
+
+test_that("adding Local Authority for 'Nothing' produces NA", {
+
+  example <- tibble(ResidentPostcode = c('Nothing'))
+
+  example <- example %>% 
+    add_fields_based_on_postcode(prefix='Resident', fields=c('LocalAuthorityName'))
+
+  expect_equal(example$ResidentLocalAuthorityName, NA_character_)
+  expect_equal(length(colnames(example)), 2)
+})

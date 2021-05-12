@@ -48,12 +48,15 @@ add_fields_based_on_some_code <- function(
       req_links_with_fields %>% unlist(use.names = FALSE)) %>% unique()
     )
 
-
-
   if(fst_metadata$nrOfRows > 5000L){
     req_join_fields <- in_data %>% pull(paste0(prefix, code_name)) %>% unique()
     code_data <- read_fst(fst_path, code_name) 
     req_code_data_indices <- which(code_data[[code_name]] %in% req_join_fields)
+
+    if(length(req_code_data_indices) == 0){
+      req_code_data_indices <- 1
+    }
+
     code_data <- read_fst(fst_path, fields_to_select_from_some_code, 
       from=min(req_code_data_indices), to=max(req_code_data_indices)) 
   }else{
