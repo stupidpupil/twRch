@@ -66,7 +66,10 @@ postcodes %>%
 
 
 postcodes %>% select(HealthBoardONSCode) %>% distinct() %>%
-  left_join(equivalents %>% mutate(HealthBoardONSCode = GEOGCD, HealthBoardOrgCode = GEOGCDO) %>% select(starts_with('HealthBoard'))) %>%
+  left_join(equivalents %>% mutate(
+    HealthBoardONSCode = GEOGCD, 
+    HealthBoardOrgCode = if_else(is.na(GEOGCDO), GEOGCDWG, GEOGCDO) # HACK for Cwm Taf Morgannwg & Swansea Bay
+    ) %>% select(starts_with('HealthBoard'))) %>%
   write_fst("inst/extdata/HealthBoardONSCode.fst")
 
 

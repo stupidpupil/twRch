@@ -58,3 +58,19 @@ test_that("adding Local Authority for 'Nothing' produces NA", {
   expect_equal(example$ResidentLocalAuthorityName, NA_character_)
   expect_equal(length(colnames(example)), 2)
 })
+
+})
+
+
+test_that("adding HealthBoardOrgCode for CF47 8AX works", {
+
+  # This test checks that we can determine the post-April 2019 health board code
+  # for a postcode in Merthyr correctly
+  example <- tibble(ResidentPostcode = c('CF47 8AX'))
+
+  example <- example %>% 
+    add_fields_based_on_postcode(prefix='Resident', fields=c('HealthBoardOrgCode'))
+
+  expect_equal(example$ResidentHealthBoardOrgCode, '7A5')
+  expect_equal(length(colnames(example)), 2)
+})
