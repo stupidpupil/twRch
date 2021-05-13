@@ -140,7 +140,7 @@ rename(
   LocalAuthorityName = LAD21NM,
   LocalAuthorityNameWelsh = LAD21NMW
 ) %>%
-left_join(postcodes %>% select(LocalAuthorityCode, CountryCode) %>% distinct(), by='LocalAuthorityCode') %>%
+left_join(postcodes %>% select(LocalAuthorityCode, HealthBoardONSCode, CountryCode) %>% distinct(), by='LocalAuthorityCode') %>%
 write_fst("inst/extdata/LocalAuthorityCode.fst", compress=100)
 
 read_csv("https://geoportal.statistics.gov.uk/datasets/e8e97fbc0444484a942f37d4190d520a_0.csv",
