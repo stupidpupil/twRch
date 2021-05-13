@@ -3,9 +3,6 @@ Given a postcode, I want to be able to:
   Get a fuzzed centroid
 
   Get LSOA11Code
-    Get DeprivationWIMDIndex
-    Get DeprivationUKIndex
-
     https://github.com/mysociety/uk_ruc
     https://github.com/mysociety/composite_uk_imd
 

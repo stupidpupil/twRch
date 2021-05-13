@@ -69,12 +69,22 @@ postcodes %>% select(HealthBoardONSCode) %>% distinct() %>%
   left_join(equivalents %>% mutate(HealthBoardONSCode = GEOGCD, HealthBoardOrgCode = GEOGCDO) %>% select(starts_with('HealthBoard'))) %>%
   write_fst("inst/extdata/HealthBoardONSCode.fst")
 
+
+#
+# Output Areas
+#
+
 postcodes %>%
   filter(!is.na(OA11Code)) %>%
   select(OA11Code, OA11RuralUrbanClassification, LSOA11Code) %>% distinct() %>%
   arrange(desc(OA11Code), LSOA11Code) %>%
   write_fst("inst/extdata/OA11Code.fst", compress=100)
 
+best_fit_lsoa_to_la <- read_csv("https://opendata.arcgis.com/datasets/e1931df9376447308dc2b8016431fbee_0.csv") %>%
+  mutate(
+    LSOA11Code = LSOA11CD,
+    LocalAuthorityCode = UTLA21CD
+  ) %>% select(LSOA11Code, LocalAuthorityCode)
 
 mysoc_uk_imd_w <- read_csv("https://raw.githubusercontent.com/mysociety/composite_uk_imd/master/uk_index/UK_IMD_W.csv") %>%
   mutate(
@@ -89,6 +99,7 @@ postcodes %>%
   filter(!is.na(LSOA11Code)) %>%
   select(LSOA11Code, MSOA11Code, CountryCode) %>% distinct() %>%
   left_join(mysoc_uk_imd_w, by='LSOA11Code') %>%
+  left_join(best_fit_lsoa_to_la, by='LSOA11Code') %>%
   arrange(desc(LSOA11Code), MSOA11Code) %>%
   write_fst("inst/extdata/LSOA11Code.fst", compress=100)
 
@@ -112,6 +123,10 @@ msoa11_names <- read_csv("https://visual.parliament.uk/msoanames/static/MSOA-Nam
   left_join(stupidpupil_wimd_msoa, by='MSOA11Code') %>%
   arrange(MSOA11Code) %>%
   write_fst("inst/extdata/MSOA11Code.fst", compress=100)
+
+#
+# Local Authorities
+#
 
 read_csv("https://geoportal.statistics.gov.uk/datasets/c02975a3618b46db958369ff7204d1bf_0.csv",
   col_types = cols_only(
