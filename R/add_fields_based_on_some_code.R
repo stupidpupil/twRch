@@ -4,6 +4,10 @@ add_fields_based_on_some_code <- function(
   prefix = "",
   fields){
 
+  if(missing(code_name)){
+    code_name <- colnames(in_data)[[1]]
+  }
+
   if(length(fields) == 0){
     return(in_data)
   }
