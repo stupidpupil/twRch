@@ -6,6 +6,7 @@ add_fields_based_on_some_code <- function(
 
   if(missing(code_name)){
     code_name <- colnames(in_data)[[1]]
+    warning(paste0("Assuming that code_name is '", code_name, "'"))
   }
 
   if(length(fields) == 0){
