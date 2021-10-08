@@ -59,9 +59,6 @@ test_that("adding Local Authority for 'Nothing' produces NA", {
   expect_equal(length(colnames(example)), 2)
 })
 
-})
-
-
 test_that("adding HealthBoardOrgCode for CF47 8AX works", {
 
   # This test checks that we can determine the post-April 2019 health board code

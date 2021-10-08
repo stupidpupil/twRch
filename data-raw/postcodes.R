@@ -2,10 +2,17 @@ library(fst)
 library(readr)
 library(dplyr)
 library(magrittr)
+library(stringr)
+
+#unlink("data-raw/postcodes.zip")
+#download.file(
+#  url = "https://geoportal.statistics.gov.uk/datasets/75edec484c5d49bcadd4893c0ebca0ff_0.csv",
+#  destfile = "data-raw/postcodes.csv"
+#  )
 
 print("Reading…")
 postcodes <- read_csv(
-  "data-raw/75edec484c5d49bcadd4893c0ebca0ff_0.csv.gz",
+  "data-raw/postcodes.csv",
   col_types = cols_only(
     pcd = col_character(),
     # 2011 Statistical Building Blocks
@@ -124,6 +131,7 @@ msoa11_names <- read_csv("https://visual.parliament.uk/msoanames/static/MSOA-Nam
     MSOA11NameWelsh = msoa11hclnmw
   ) %>%
   left_join(stupidpupil_wimd_msoa, by='MSOA11Code') %>%
+  left_join(postcodes %>% filter(!is.na(MSOA11Code) %>% select(MSOA11Code, CountryCode), by='MSOA11Code') %>%
   arrange(MSOA11Code) %>%
   write_fst("inst/extdata/MSOA11Code.fst", compress=100)
 
