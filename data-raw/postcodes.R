@@ -131,7 +131,7 @@ msoa11_names <- read_csv("https://visual.parliament.uk/msoanames/static/MSOA-Nam
     MSOA11NameWelsh = msoa11hclnmw
   ) %>%
   left_join(stupidpupil_wimd_msoa, by='MSOA11Code') %>%
-  left_join(postcodes %>% filter(!is.na(MSOA11Code) %>% select(MSOA11Code, CountryCode), by='MSOA11Code') %>%
+  left_join(postcodes %>% filter(!is.na(MSOA11Code)) %>% select(MSOA11Code, CountryCode) %>% distinct(), by='MSOA11Code') %>%
   arrange(MSOA11Code) %>%
   write_fst("inst/extdata/MSOA11Code.fst", compress=100)
 

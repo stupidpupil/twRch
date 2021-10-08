@@ -63,7 +63,8 @@ add_fields_based_on_some_code <- function(
 
 
   code_data <- code_data %>%
-    select(all_of(fields_to_keep_for_join))
+    select(all_of(fields_to_keep_for_join)) %>%
+    distinct()
 
   return(in_data <- in_data %>% left_join(code_data, by=paste0(prefix, code_name)))
 }
