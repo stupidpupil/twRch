@@ -3,6 +3,7 @@ library(readr)
 library(dplyr)
 library(magrittr)
 library(stringr)
+library(sf)
 
 #unlink("data-raw/postcodes.zip")
 #download.file(
@@ -96,6 +97,13 @@ best_fit_lsoa_to_la <- read_csv("https://opendata.arcgis.com/datasets/e1931df937
     LocalAuthorityCode = UTLA21CD
   ) %>% select(LSOA11Code, LocalAuthorityCode)
 
+lsoa_boundaries <- st_read("https://opendata.arcgis.com/datasets/8bbadffa6ddc493a94078c195a1e293b_0.geojson") %>%
+  mutate(
+    LSOA11Code = LSOA11CD,
+    LSOA11BoundariesGeneralisedClippedWKT = st_as_text(geometry, EWKT=TRUE)) %>% 
+  st_drop_geometry() %>%
+  select(LSOA11Code, LSOA11BoundariesGeneralisedClippedWKT)
+
 mysoc_uk_imd_w <- read_csv("https://raw.githubusercontent.com/mysociety/composite_uk_imd/master/uk_index/UK_IMD_W.csv") %>%
   mutate(
     LSOA11Code = lsoa,
@@ -110,6 +118,7 @@ postcodes %>%
   select(LSOA11Code, MSOA11Code, CountryCode) %>% distinct() %>%
   left_join(mysoc_uk_imd_w, by='LSOA11Code') %>%
   left_join(best_fit_lsoa_to_la, by='LSOA11Code') %>%
+  left_join(lsoa_boundaries, by='LSOA11Code') %>%
   arrange(desc(LSOA11Code), MSOA11Code) %>%
   write_fst("inst/extdata/LSOA11Code.fst", compress=100)
 
