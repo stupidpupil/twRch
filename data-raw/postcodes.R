@@ -115,7 +115,7 @@ mysoc_uk_imd_w <- read_csv("https://raw.githubusercontent.com/mysociety/composit
 
 postcodes %>%
   filter(!is.na(LSOA11Code)) %>%
-  select(LSOA11Code, MSOA11Code, CountryCode) %>% distinct() %>%
+  select(LSOA11Code, CountryCode, MSOA11Code) %>% distinct() %>%
   left_join(mysoc_uk_imd_w, by='LSOA11Code') %>%
   left_join(best_fit_lsoa_to_la, by='LSOA11Code') %>%
   left_join(lsoa_boundaries, by='LSOA11Code') %>%

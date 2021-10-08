@@ -30,7 +30,6 @@ add_fields_based_on_some_code <- function(
     intersect(direct_fields, fields), 
     names(req_links_with_fields)) %>% unique()
   
-
   fields_to_keep_for_join <- paste0(
     prefix, 
     c(
