@@ -11,14 +11,14 @@ test_that("adding OA11Code for B75NJ works", {
 })
 
 
-test_that("adding CountryCode for CF24 3AE and SA99 1BN works", {
+test_that("adding CountryName for EH99 1SP and SA99 1BN works", {
 
-  example <- tibble(ResidentPostcode = c('CF24 3AE', 'SA99 1BN'))
+  example <- tibble(ResidentPostcode = c('EH99 1SP', 'SA99 1BN'))
 
   example <- example %>% 
-    add_fields_based_on_postcode(prefix='Resident', fields='CountryCode')
+    add_fields_based_on_postcode(prefix='Resident', fields='CountryName')
 
-  expect_equal(example$ResidentCountryCode, c('W92000004', 'W92000004'))
+  expect_equal(example$ResidentCountryName, c('Scotland', 'Wales'))
   expect_equal(length(colnames(example)), 2)
 })
 
