@@ -7,15 +7,13 @@
 
 ```R
 
-welsh_lsoas <- all_codes_with_fields("LSOA11Code", "CountryName") %>%
-  filter(CountryName == "Wales") %>%
-  add_fields_based_on_some_code(fields="LSOA11BoundariesGeneralisedClippedWKT")
+welsh_lsoas <- all_codes_with_fields("LSOA11Code", c("CountryName", "LSOA11BoundariesGeneralisedClippedWKT")) %>%
+  filter(CountryName == "Wales")
 
 library(sf)
 
 welsh_lsoas <- welsh_lsoas %>% 
-  st_set_geometry(st_as_sfc(welsh_lsoas$LSOA11BoundariesGeneralisedClippedWKT)) %>% 
-  select(-LSOA11BoundariesGeneralisedClippedWKT)
+  convert_wkt_to_geometry()
 
 library(ggplot2)
 
