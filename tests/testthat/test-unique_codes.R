@@ -1,7 +1,7 @@
 if(file.exists("inst/extdata")){
   dir_path <- "inst/extdata"
 }else{
-  dir_path <- system.file("extdata", package="BasicPostcodes")
+  dir_path <- system.file("extdata", package="twRch")
 }
 
 fsts <- dir(dir_path)

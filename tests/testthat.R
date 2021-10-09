@@ -1,4 +1,4 @@
 library(testthat)
-library(BasicPostcodes)
+library(twRch)
 
-test_check("BasicPostcodes")
+test_check("twRch")

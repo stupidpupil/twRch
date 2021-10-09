@@ -97,6 +97,7 @@ best_fit_lsoa_to_la <- read_csv("https://opendata.arcgis.com/datasets/e1931df937
     LocalAuthorityCode = UTLA21CD
   ) %>% select(LSOA11Code, LocalAuthorityCode)
 
+
 lsoa_boundaries <- st_read("https://opendata.arcgis.com/datasets/8bbadffa6ddc493a94078c195a1e293b_0.geojson") %>%
   mutate(
     LSOA11Code = LSOA11CD,
@@ -148,6 +149,13 @@ msoa11_names <- read_csv("https://visual.parliament.uk/msoanames/static/MSOA-Nam
 # Local Authorities
 #
 
+la_boundaries <- st_read("https://opendata.arcgis.com/datasets/4f47ca74ff0a470cb4128905a38e1b35_0.geojson") %>%
+  mutate(
+    LocalAuthorityCode = LAD21CD,
+    LocalAuthorityBoundariesGeneralisedClippedWKT = st_as_text(geometry, EWKT=TRUE)) %>% 
+  st_drop_geometry() %>%
+  select(LocalAuthorityCode, LocalAuthorityBoundariesGeneralisedClippedWKT)
+
 read_csv("https://geoportal.statistics.gov.uk/datasets/c02975a3618b46db958369ff7204d1bf_0.csv",
   col_types = cols_only(
     LAD21CD = col_character(),
@@ -161,6 +169,7 @@ rename(
   LocalAuthorityNameWelsh = LAD21NMW
 ) %>%
 left_join(postcodes %>% select(LocalAuthorityCode, HealthBoardONSCode, CountryCode) %>% distinct(), by='LocalAuthorityCode') %>%
+left_join(la_boundaries, by='LocalAuthorityCode') %>%
 write_fst("inst/extdata/LocalAuthorityCode.fst", compress=100)
 
 read_csv("https://geoportal.statistics.gov.uk/datasets/e8e97fbc0444484a942f37d4190d520a_0.csv",

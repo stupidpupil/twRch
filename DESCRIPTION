@@ -1,10 +1,10 @@
-Package: BasicPostcodes
-Title: BasicPostcodes
+Package: twRch
+Title: twRch
 Version: 0.0.1
 Authors@R: c(
   person("Adam", "Watkins", email = "adam.watkins@stupidpupil.co.uk", role = c("aut", "cre"))
   )
-Description: Basic postcodes stuff
+Description: Bunch of ONS hierarchy/reference stuff shoved into a package
 License: file LICENSE
 Encoding: UTF-8
 Depends: 
