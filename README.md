@@ -1,4 +1,9 @@
 
+A hacked together toy project to make some UK geography reference data, mostly from the ONS, easily queryable from R.
+
+Uses *[fst](https://www.fstpackage.org/)* for fast reads of data.
+
+There are probably serious issues with respecting hierarchies correctly.
 
 ## Examples
 
