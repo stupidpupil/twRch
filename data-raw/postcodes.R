@@ -69,8 +69,9 @@ print("Writing…")
 
 
 postcodes %>% 
-  select(Postcode, CountryCode, HealthBoardONSCode, LocalAuthorityCode, OA11Code, BUASD11Code, BUA11Code, PostcodeLatitude, PostcodeLongitude) %>%
   filter(CountryCode != 'N92000002') %>% # Northern Ireland's postcodes have painful licensing
+  mutate(PostcodeCentroidWKT = paste0("SRID=4326;POINT(", PostcodeLongitude, " ", PostcodeLatitude,")")) %>%
+  select(Postcode, CountryCode, HealthBoardONSCode, LocalAuthorityCode, ElectoralWardCode, OA11Code, BUASD11Code, BUA11Code, PostcodeCentroidWKT) %>%
   arrange(desc(CountryCode), HealthBoardONSCode, LocalAuthorityCode, Postcode) %>%
   write_fst("inst/extdata/Postcode.fst", compress=100)
 
@@ -93,11 +94,13 @@ postcodes %>%
   arrange(desc(OA11Code), LSOA11Code) %>%
   write_fst("inst/extdata/OA11Code.fst", compress=100)
 
-best_fit_lsoa_to_la <- read_csv("https://opendata.arcgis.com/datasets/e1931df9376447308dc2b8016431fbee_0.csv") %>%
+
+best_fit_lsoa <- read_csv("https://opendata.arcgis.com/datasets/6408273b5aff4e01ab540a1b1b95b7a7_0.csv") %>%
   mutate(
     LSOA11Code = LSOA11CD,
-    LocalAuthorityCode = UTLA21CD
-  ) %>% select(LSOA11Code, LocalAuthorityCode)
+    ElectoralWardCode = WD20CD,
+    LocalAuthorityCode = LAD20CD
+  ) %>% select(LSOA11Code, ElectoralWardCode, LocalAuthorityCode)
 
 
 lsoa_boundaries <- st_read("https://opendata.arcgis.com/datasets/8bbadffa6ddc493a94078c195a1e293b_0.geojson") %>%
@@ -120,7 +123,7 @@ postcodes %>%
   filter(!is.na(LSOA11Code)) %>%
   select(LSOA11Code, CountryCode, MSOA11Code) %>% distinct() %>%
   left_join(mysoc_uk_imd_w, by='LSOA11Code') %>%
-  left_join(best_fit_lsoa_to_la, by='LSOA11Code') %>%
+  left_join(best_fit_lsoa, by='LSOA11Code') %>%
   left_join(lsoa_boundaries, by='LSOA11Code') %>%
   arrange(desc(LSOA11Code), MSOA11Code) %>%
   write_fst("inst/extdata/LSOA11Code.fst", compress=100)
