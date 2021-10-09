@@ -5,7 +5,23 @@ Uses *[fst](https://www.fstpackage.org/)* for fast reads of data.
 
 There are probably serious issues with respecting hierarchies correctly.
 
+## Features and Antifeatures
+
+* Local postcode lookup (excluding Northern Ireland)
+* Includes boundaries for Local Authorities and LSOAs (Generalised and Clipped only)
+
 ## Examples
+
+### Details for a postcode
+
+```R
+tibble(MyPostcode = "CF10 3NQ") %>% 
+  add_fields_based_on_postcode(prefix="My", fields=c(
+    "ElectoralWardName", 
+    "LocalAuthorityName", "LocalAuthorityNameWelsh", 
+    "CountryName", "CountryNameWelsh", 
+    "MSOA11Name", "MSOA11NameWelsh"))
+```
 
 ### All Welsh LSOAs with boundaries 
 
