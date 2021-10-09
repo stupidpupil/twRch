@@ -143,6 +143,13 @@ stupidpupil_wimd_msoa <- read_csv("https://raw.githubusercontent.com/stupidpupil
     ) %>%
   select(starts_with('MSOA11'))
 
+msoa11_boundaries <- st_read("https://opendata.arcgis.com/datasets/abfccdf1071c43dd981a49eb7da13d2b_0.geojson") %>%
+  mutate(
+    MSOA11Code = MSOA11CD,
+    MSOA11BoundariesGeneralisedClippedWKT = st_as_text(geometry, EWKT=TRUE)) %>% 
+  st_drop_geometry() %>%
+  select(MSOA11Code, MSOA11BoundariesGeneralisedClippedWKT)
+
 msoa11_names <- read_csv("https://visual.parliament.uk/msoanames/static/MSOA-Names-Latest.csv",
   col_types = cols_only(
     msoa11cd = col_character(),
@@ -154,6 +161,7 @@ msoa11_names <- read_csv("https://visual.parliament.uk/msoanames/static/MSOA-Nam
     MSOA11NameWelsh = msoa11hclnmw
   ) %>%
   left_join(stupidpupil_wimd_msoa, by='MSOA11Code') %>%
+  left_join(msoa11_boundaries, by="MSOA11Code") %>%
   left_join(postcodes %>% filter(!is.na(MSOA11Code)) %>% select(MSOA11Code, CountryCode) %>% distinct(), by='MSOA11Code') %>%
   arrange(MSOA11Code) %>%
   write_fst("inst/extdata/MSOA11Code.fst", compress=100)

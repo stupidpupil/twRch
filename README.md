@@ -8,8 +8,8 @@ There are probably serious issues with respecting hierarchies correctly.
 ## Features and Antifeatures
 
 * Local postcode lookup (excluding Northern Ireland)
-* Includes boundaries for Local Authorities and LSOAs (Generalised and Clipped only)
-* At least 50 megabytes installed
+* Includes boundaries for Local Authorities, MSOAs and LSOAs (Generalised and Clipped only)
+* At least 60 megabytes installed
 
 ## Examples
 
