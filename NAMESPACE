@@ -1,4 +1,7 @@
 export(add_fields_based_on_postcode)
+export(add_fields_based_on_some_code)
+export(all_codes_with_fields)
+export(convert_wkt_to_geometry)
 import(dplyr)
 import(stringr)
 import(tidyr)
