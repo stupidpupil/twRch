@@ -5,11 +5,19 @@ library(magrittr)
 library(stringr)
 library(sf)
 
-#unlink("data-raw/postcodes.zip")
-#download.file(
-#  url = "https://geoportal.statistics.gov.uk/datasets/75edec484c5d49bcadd4893c0ebca0ff_0.csv",
-#  destfile = "data-raw/postcodes.csv"
-#  )
+if(!file.exists("data-raw/postcodes.csv")){
+  download.file(
+    url = "https://geoportal.statistics.gov.uk/datasets/75edec484c5d49bcadd4893c0ebca0ff_0.csv",
+    destfile = "data-raw/postcodes.csv"
+    )
+}
+
+if(!file.exists("data-raw/code_history_database.zip")){
+  download.file(
+    url = "https://www.arcgis.com/sharing/rest/content/items/8e8f12e8fa5d476e829b105103ada83c/data",
+    destfile = "data-raw/code_history_database.zip"
+    )
+}
 
 print("Reading…")
 postcodes <- read_csv(
@@ -53,7 +61,7 @@ postcodes <- read_csv(
     PostcodeLongitude = long
   )
 
-equivalents <- read_csv(unz("data-raw/Code_History_Database_(December_2020)_UK.zip", "Equivalents_V2.csv"),
+equivalents <- read_csv(unz("data-raw/code_history_database.zip", "Equivalents_V2.csv"),
   col_types = cols_only(
     GEOGCD = col_character(),
     GEOGCDO = col_character(),
