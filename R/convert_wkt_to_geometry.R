@@ -7,6 +7,6 @@ convert_wkt_to_geometry <- function(in_data){
   wkt_column = colnames(in_data)[wkt_columns]
 
   in_data %>%
-    sf::st_set_geometry(sf::st_as_sfc(in_data[,wkt_column])) %>% 
+    sf::st_set_geometry(sf::st_as_sfc(in_data %>% pull(wkt_column))) %>% 
     select(-all_of(wkt_column))
 }
