@@ -28,6 +28,7 @@ postcodes <- read_csv(
     oslaua = col_character(),
     ctry = col_character(),
     # Constituency
+    ward = col_character(),
     pcon = col_character(),
     # Health
     oshlthau = col_character(),
@@ -45,6 +46,7 @@ postcodes <- read_csv(
     BUA11Code = bua11,
     LocalAuthorityCode = oslaua,
     CountryCode = ctry,
+    ElectoralWardCode = ward,
     WestminsterParliamentConstituencyCode = pcon,
     HealthBoardONSCode = oshlthau, # Good enough name for now…
     PostcodeLatitude = lat,
@@ -171,6 +173,33 @@ rename(
 left_join(postcodes %>% select(LocalAuthorityCode, HealthBoardONSCode, CountryCode) %>% distinct(), by='LocalAuthorityCode') %>%
 left_join(la_boundaries, by='LocalAuthorityCode') %>%
 write_fst("inst/extdata/LocalAuthorityCode.fst", compress=100)
+
+#
+# Constituencies
+#
+
+westminster_parliament_constituency_boundaries <- st_read("https://opendata.arcgis.com/datasets/8533474c4a474990a80e7c932f54fa46_0.geojson")
+
+
+#
+# Wards
+# https://ago-item-storage.s3.us-east-1.amazonaws.com/f510f804b53a4a9b95644b3f8c6ddf5b/WD21_LAD21_UK_LU_provisional.xlsx?X-Amz-Security-Token=IQoJb3JpZ2luX2VjEEMaCXVzLWVhc3QtMSJHMEUCIQCnzNRadJgydPdVZvZH3gFFSUux8O0fE2vOK4fcjdG0sAIgMXPESkWKa2o7mggFwKA%2F2pSz8veOHXrsrg2KGdCVl4IqgwQIvP%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARAAGgw2MDQ3NTgxMDI2NjUiDNWKLBhWQMXX6%2FOVnirXA4nbQhZ%2B97q9A5mBDTMJ9XLiummnYLG7RGTeB6LdSKuBa%2F8ceW3sfQFiQZCzyhoFfR4A0zKgLTPRXocsO9gKqiseD5FCFCHl5tLJ1UEBn2xng9jJ5dP%2B9ayVgTpIP5wjgm9aedqkJxMmOB02KV9RvIEx0UMqrFseAn2G33FNOWKd9lS5ZUe5qFazdneUTIi2nF%2Frf5b%2FTEjY1nstJ%2BtPoOv%2FXboQyX4GWejNni%2BHdadzUtI%2F1OZ70ubfS9Tkhcjbwj2iH5Romw9hiwEHcj4Efi6J7zukT2p1aLmCX9gNCiTVg4W2oobCort68w8dkhvzxpdXVc1LNeuMmz430aE%2B8%2Ftn1v4uabZ4ZqW5e64d8ZCuc3zgTvwwTuh3FOKkl9do0QzkfsB%2FXzDpnpuKooKcUSDVFtViDf9uAUL%2BrNmH3%2FMAz14kobacESJOYvHQ0UpnZ%2BSyZcVSjH4TH328LMJuiMyF%2FuarBVD28PxjYMuuyrdAuXv9XUeVe%2FfkEl7dHrZbIZLtX95ICgP9AxWLAh3OG4k3cL2yp2zgF%2B6HH0qFloFYn%2BEavarb6lPjGX3GWKtBmkxgX3YtFCXkLGgASyJumslTasWkqC%2Br18pxMfKlMtZizEnCngXLcjCr34WLBjqlAWdwNdsJPR7sWaiGiuYj9%2BfKgWH04kx2eeCaH88zp74OLijnBRQ3EhNwBB0lK9T4Q7A1JfQJh%2BYcHIIV0oIOvJIp2nv8k6%2FOXqzKfbZTp9%2FnDAkUC1jwIVjZ9xx2mg0oiPDZp5X82l%2BdtXLK1Tn5ctl9JJx6pPvmemlgQ0z1%2BagcZrBUqWwRcYNHcKXkXgeEI%2F9dquiXGoJx037H2EWg2K8OY0aE2A%3D%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20211009T104210Z&X-Amz-SignedHeaders=host&X-Amz-Expires=300&X-Amz-Credential=ASIAYZTTEKKE7W7EZKW2%2F20211009%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=77a604fee54f0aaaac1c71b839b73b74ca652e640ab88c5161db62c48d76ca9d
+
+
+wards <- read_csv("https://opendata.arcgis.com/datasets/063ccaa43b9a4f4281b3ad803c1ed2e8_0.csv",
+  col_types = cols_only(
+    WD20CD = col_character(),
+    WD20NM = col_character(),
+    LAD20CD = col_character()
+  )) %>% unique()
+
+wards %>%
+  rename(
+    ElectoralWardCode = WD20CD,
+    ElectoralWardName = WD20NM,
+    LocalAuthorityCode = LAD20CD
+  ) %>%
+  write_fst("inst/extdata/ElectoralWardCode.fst", compress=100)
 
 read_csv("https://geoportal.statistics.gov.uk/datasets/e8e97fbc0444484a942f37d4190d520a_0.csv",
   col_types = cols_only(
