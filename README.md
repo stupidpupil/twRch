@@ -9,6 +9,7 @@ There are probably serious issues with respecting hierarchies correctly.
 
 * Local postcode lookup (excluding Northern Ireland)
 * Includes boundaries for Countries, Local Authorities, MSOAs and LSOAs (Generalised and Clipped only)
+* All coordinates in EPSG:4326/WGS84 (rather than EPSG:27700/OSGB 1936)
 * At least 60 megabytes installed
 
 ## Examples
