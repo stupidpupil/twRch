@@ -9,6 +9,7 @@ There are probably serious issues with respecting hierarchies correctly.
 
 * Local postcode lookup (excluding Northern Ireland)
 * Includes boundaries for Local Authorities and LSOAs (Generalised and Clipped only)
+* At least 50 megabytes installed
 
 ## Examples
 
@@ -46,3 +47,4 @@ ggplot(welsh_lsoas) + geom_sf()
 ## See also
 
 - https://github.com/francisbarton/jogger/
+- https://github.com/Chrisjb/rgeoportal
