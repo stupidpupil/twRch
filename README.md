@@ -7,7 +7,7 @@
 
 ```R
 
-welsh_lsoas <- all_codes_with_fields("LSOA11Code", c("CountryName", "LSOA11BoundariesGeneralisedClippedWKT")) %>%
+welsh_lsoas <- all_codes_with_fields("LSOA11Code", "CountryName", "LSOA11BoundariesGeneralisedClippedWKT") %>%
   filter(CountryName == "Wales")
 
 library(sf)
