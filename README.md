@@ -23,6 +23,14 @@ tibble(MyPostcode = "CF10 3NQ") %>%
     "LocalAuthorityName", "LocalAuthorityNameWelsh", 
     "CountryName", "CountryNameWelsh", 
     "MSOA11Name", "MSOA11NameWelsh"))
+    
+# A tibble: 1 × 8
+#  MyPostcode MyCountryName MyCountryNameWelsh MyLocalAuthority… MyLocalAuthorit…
+#  <chr>      <chr>         <chr>              <chr>             <chr>
+# 1 CF103NQ    Wales         Cymru              Cardiff           Caerdydd
+# … with 3 more variables: MyElectoralWardName <chr>, MyMSOA11Name <chr>,
+#   MyMSOA11NameWelsh <chr>
+    
 ```
 
 ### All Welsh LSOAs with boundaries 
