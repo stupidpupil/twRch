@@ -96,14 +96,49 @@ postcodes %>% select(HealthBoardONSCode) %>% distinct() %>%
 # Output Areas
 #
 
+oa_to_senedd_constituency_code <- read_csv("https://opendata.arcgis.com/datasets/c1e0c4c13c6a4484aa3d7216ead56785_0.csv") %>%
+  mutate(
+    OA11Code = OA11CD,
+    SeneddConstituencyCode = NAWC17CD,
+    SeneddConstituencyName = NAWC17NM,
+    SeneddRegionCode = NAWER17CD,
+    SeneddRegionName = NAWER17NM
+  )
+
 postcodes %>%
   filter(!is.na(OA11Code)) %>%
   select(OA11Code, OA11RuralUrbanClassification, LSOA11Code) %>% distinct() %>%
+  left_join(oa_to_senedd_constituency_code %>% select(OA11Code, SeneddConstituencyCode), by='OA11Code') %>%
   arrange(desc(OA11Code), LSOA11Code) %>%
   write_fst("inst/extdata/OA11Code.fst", compress=100)
 
+senedd_constituency_boundaries <- st_read("https://opendata.arcgis.com/datasets/961ca1d4611e4c9ebefee0144c1497f0_0.geojson") %>%
+  mutate(
+    SeneddConstituencyCode = nawc18cd,
+    SeneddConstituencyBoundariesGeneralisedClippedWKT = st_as_text(geometry, EWKT=TRUE)) %>% 
+  st_drop_geometry() %>%
+  select(SeneddConstituencyCode, SeneddConstituencyBoundariesGeneralisedClippedWKT)
 
-best_fit_lsoa <- read_csv("https://opendata.arcgis.com/datasets/6408273b5aff4e01ab540a1b1b95b7a7_0.csv") %>%
+senedd_region_boundaries <- st_read("https://opendata.arcgis.com/datasets/976c4b73cf034a9d9355ebc04b856ff2_0.geojson") %>%
+  mutate(
+    SeneddRegionCode = nawer18cd,
+    SeneddRegionBoundariesGeneralisedClippedWKT = st_as_text(geometry, EWKT=TRUE)) %>% 
+  st_drop_geometry() %>%
+  select(SeneddRegionCode, SeneddRegionBoundariesGeneralisedClippedWKT)
+
+oa_to_senedd_constituency_code %>%
+  select(SeneddConstituencyCode, SeneddConstituencyName, SeneddRegionCode) %>%
+  distinct() %>%
+  left_join(senedd_constituency_boundaries, by='SeneddConstituencyCode') %>%
+  write_fst("inst/extdata/SeneddConstituencyCode.fst", compress=100)
+
+oa_to_senedd_constituency_code %>%
+  select(SeneddRegionCode, SeneddRegionName) %>%
+  distinct() %>%
+  left_join(senedd_region_boundaries, by='SeneddRegionCode') %>%
+  write_fst("inst/extdata/SeneddRegionCode.fst", compress=100)
+
+best_fit_lsoa_admin <- read_csv("https://opendata.arcgis.com/datasets/6408273b5aff4e01ab540a1b1b95b7a7_0.csv") %>%
   mutate(
     LSOA11Code = LSOA11CD,
     ElectoralWardCode = WD20CD,
@@ -131,7 +166,7 @@ postcodes %>%
   filter(!is.na(LSOA11Code)) %>%
   select(LSOA11Code, CountryCode, MSOA11Code) %>% distinct() %>%
   left_join(mysoc_uk_imd_w, by='LSOA11Code') %>%
-  left_join(best_fit_lsoa, by='LSOA11Code') %>%
+  left_join(best_fit_lsoa_admin, by='LSOA11Code') %>%
   left_join(lsoa_boundaries, by='LSOA11Code') %>%
   arrange(desc(LSOA11Code), MSOA11Code) %>%
   write_fst("inst/extdata/LSOA11Code.fst", compress=100)
@@ -223,12 +258,21 @@ wards <- read_csv("https://opendata.arcgis.com/datasets/063ccaa43b9a4f4281b3ad80
     LAD20CD = col_character()
   )) %>% distinct()
 
+ward_to_senedd_lookup <- read_csv("https://opendata.arcgis.com/datasets/2981481a06444adf80f1992fe0f81536_0.csv") %>%
+  mutate(
+    ElectoralWardCode = WD20CD,
+    ElectoralWardNameWelsh = WD20NMW,
+    SeneddConstituencyCode = NAWC20CD
+  ) %>%
+  select(ElectoralWardCode, ElectoralWardNameWelsh, SeneddConstituencyCode)
+
 wards %>%
   rename(
     ElectoralWardCode = WD20CD,
     ElectoralWardName = WD20NM,
     LocalAuthorityCode = LAD20CD
   ) %>%
+  left_join(ward_to_senedd_lookup, by='ElectoralWardCode') %>%
   write_fst("inst/extdata/ElectoralWardCode.fst", compress=100)
 
 read_csv("https://geoportal.statistics.gov.uk/datasets/e8e97fbc0444484a942f37d4190d520a_0.csv",
