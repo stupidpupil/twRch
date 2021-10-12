@@ -258,21 +258,12 @@ wards <- read_csv("https://opendata.arcgis.com/datasets/063ccaa43b9a4f4281b3ad80
     LAD20CD = col_character()
   )) %>% distinct()
 
-ward_to_senedd_lookup <- read_csv("https://opendata.arcgis.com/datasets/2981481a06444adf80f1992fe0f81536_0.csv") %>%
-  mutate(
-    ElectoralWardCode = WD20CD,
-    ElectoralWardNameWelsh = WD20NMW,
-    SeneddConstituencyCode = NAWC20CD
-  ) %>%
-  select(ElectoralWardCode, ElectoralWardNameWelsh, SeneddConstituencyCode)
-
 wards %>%
   rename(
     ElectoralWardCode = WD20CD,
     ElectoralWardName = WD20NM,
     LocalAuthorityCode = LAD20CD
   ) %>%
-  left_join(ward_to_senedd_lookup, by='ElectoralWardCode') %>%
   write_fst("inst/extdata/ElectoralWardCode.fst", compress=100)
 
 read_csv("https://geoportal.statistics.gov.uk/datasets/e8e97fbc0444484a942f37d4190d520a_0.csv",
