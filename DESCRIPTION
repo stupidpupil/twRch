@@ -12,6 +12,7 @@ Depends:
   dplyr,
   stringr,
   tidyr,
-  fst
+  fst,
+  readODS
 Suggests: 
   testthat

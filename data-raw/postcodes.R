@@ -4,6 +4,7 @@ library(dplyr)
 library(magrittr)
 library(stringr)
 library(sf)
+library(readODS)
 
 if(!file.exists("data-raw/postcodes.csv")){
   download.file(
@@ -105,6 +106,7 @@ oa_to_senedd_constituency_code <- read_csv("https://opendata.arcgis.com/datasets
     SeneddRegionName = NAWER17NM
   )
 
+
 postcodes %>%
   filter(!is.na(OA11Code)) %>%
   select(OA11Code, OA11RuralUrbanClassification, LSOA11Code) %>% distinct() %>%
@@ -145,6 +147,18 @@ best_fit_lsoa_admin <- read_csv("https://opendata.arcgis.com/datasets/6408273b5a
     LocalAuthorityCode = LAD20CD
   ) %>% select(LSOA11Code, ElectoralWardCode, LocalAuthorityCode)
 
+if(!file.exists("data-raw/lsoa_stats_wales_lookup.ods")){
+  download.file(
+    url = "https://statswales.gov.wales/Download/File?fileId=570",
+    destfile = "data-raw/lsoa_stats_wales_lookup.ods"
+    )
+}
+
+lsoa_to_senedd_constituency_code <- read_ods("data-raw/lsoa_stats_wales_lookup.ods", sheet="Geography_Lookup") %>% 
+  rename(
+    LSOA11Code = `Lower Layer Super Output Area (LSOA) Code`, 
+    SeneddConstituencyCode = `Constituency Area (CA) Code`) %>% 
+  select(LSOA11Code, SeneddConstituencyCode)
 
 lsoa_boundaries <- st_read("https://opendata.arcgis.com/datasets/8bbadffa6ddc493a94078c195a1e293b_0.geojson") %>%
   mutate(
