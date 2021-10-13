@@ -19,6 +19,10 @@ add_fields_based_on_some_code <- function(
   fst_path <- fst_path_for_code(code_name)
   fst_metadata <- metadata_fst(fst_path)
 
+  fields <- fields %>%
+    str_replace("Boundaries$", "BoundariesGeneralisedClippedWKT") %>%
+    str_replace("Centroid$", "CentroidWKT")
+
   # Add prefix to fields if appropriate
   fields_with_prefix_added <- fields %>%
     str_replace(paste0("^(", entity_name, ")?"), entity_name)

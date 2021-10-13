@@ -182,6 +182,7 @@ postcodes %>%
   left_join(mysoc_uk_imd_w, by='LSOA11Code') %>%
   left_join(best_fit_lsoa_admin, by='LSOA11Code') %>%
   left_join(lsoa_boundaries, by='LSOA11Code') %>%
+  left_join(lsoa_to_senedd_constituency_code, by='LSOA11Code') %>%
   arrange(desc(LSOA11Code), MSOA11Code) %>%
   write_fst("inst/extdata/LSOA11Code.fst", compress=100)
 
