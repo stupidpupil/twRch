@@ -62,7 +62,7 @@ postcodes <- read_csv(
     PostcodeLongitude = long
   )
 
-equivalents <- read_csv(unz("data-raw/code_history_database.zip", "Equivalents_V2.csv"),
+equivalents <- read_csv(unz("data-raw/code_history_database.zip", "Equivalents.csv"),
   col_types = cols_only(
     GEOGCD = col_character(),
     GEOGCDO = col_character(),
@@ -85,7 +85,7 @@ postcodes %>%
   write_fst("inst/extdata/Postcode.fst", compress=100)
 
 
-postcodes %>% select(HealthBoardONSCode) %>% distinct() %>%
+postcodes %>% select(HealthBoardONSCode, CountryCode) %>% distinct() %>%
   left_join(equivalents %>% mutate(
     HealthBoardONSCode = GEOGCD, 
     HealthBoardOrgCode = if_else(is.na(GEOGCDO), GEOGCDWG, GEOGCDO) # HACK for Cwm Taf Morgannwg & Swansea Bay
