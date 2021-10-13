@@ -13,8 +13,17 @@ add_fields_based_on_some_code <- function(
     return(in_data)
   }
 
+  entity_name <- code_name %>%
+    str_replace("Code$", "")
+
   fst_path <- fst_path_for_code(code_name)
   fst_metadata <- metadata_fst(fst_path)
+
+  # Add prefix to fields if appropriate
+  fields_with_prefix_added <- fields %>%
+    str_replace(paste0("^(", entity_name, ")?"), entity_name)
+
+  fields <- if_else(fields_with_prefix_added %in% fst_metadata$columnNames, fields_with_prefix_added, fields)
 
   direct_fields <- setdiff(fst_metadata$columnNames, code_name)
 
