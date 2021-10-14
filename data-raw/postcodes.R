@@ -86,6 +86,7 @@ postcodes %>%
 
 
 postcodes %>% select(HealthBoardONSCode, CountryCode) %>% distinct() %>%
+  filter(!is.na(HealthBoardONSCode)) %>%
   left_join(equivalents %>% mutate(
     HealthBoardONSCode = GEOGCD, 
     HealthBoardOrgCode = if_else(is.na(GEOGCDO), GEOGCDWG, GEOGCDO) # HACK for Cwm Taf Morgannwg & Swansea Bay
