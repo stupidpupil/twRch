@@ -18,3 +18,12 @@ test_that("getting all MSOA11s for Wales works (with varying degrees of inferenc
   expect_equal(example1, example4)
   expect_equal(nrow(example1), 410)
 })
+
+test_that("getting all postcodes for Cardiff works", {
+
+  example <- all_codes_with_fields("Postcode", "LocalAuthorityName") %>% 
+    filter(LocalAuthorityName == "Cardiff")
+
+  expect_equal(colnames(example), c('Postcode', 'LocalAuthorityName'))
+})
+
