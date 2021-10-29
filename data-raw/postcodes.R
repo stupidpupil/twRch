@@ -107,7 +107,6 @@ oa_to_senedd_constituency_code <- read_csv("https://opendata.arcgis.com/datasets
     SeneddRegionName = NAWER17NM
   )
 
-
 postcodes %>%
   filter(!is.na(OA11Code)) %>%
   select(OA11Code, OA11RuralUrbanClassification, LSOA11Code) %>% distinct() %>%
@@ -130,14 +129,16 @@ senedd_region_boundaries <- st_read("https://opendata.arcgis.com/datasets/976c4b
   select(SeneddRegionCode, SeneddRegionBoundariesGeneralisedClippedWKT)
 
 oa_to_senedd_constituency_code %>%
-  select(SeneddConstituencyCode, SeneddConstituencyName, SeneddRegionCode) %>%
+  select(SeneddConstituencyCode, SeneddRegionCode) %>%
   distinct() %>%
+  left_join(read_csv("data-raw/SeneddConstituencyCode.csv"), by='SeneddConstituencyCode') %>%
   left_join(senedd_constituency_boundaries, by='SeneddConstituencyCode') %>%
   write_fst("inst/extdata/SeneddConstituencyCode.fst", compress=100)
 
 oa_to_senedd_constituency_code %>%
-  select(SeneddRegionCode, SeneddRegionName) %>%
+  select(SeneddRegionCode) %>%
   distinct() %>%
+  left_join(read_csv("data-raw/SeneddRegionCode.csv"), by='SeneddRegionCode') %>%
   left_join(senedd_region_boundaries, by='SeneddRegionCode') %>%
   write_fst("inst/extdata/SeneddRegionCode.fst", compress=100)
 
